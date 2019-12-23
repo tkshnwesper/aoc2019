@@ -102,8 +102,8 @@
                   98379
                   118530))
 
-(defn -main
-  "Day 1"
-  []
-  ; (println (apply + (map #(- (Math/floor (/ % 3)) 2) inputs)))
-  )
+(defn calculate-fuel-requirements
+  [inputs]
+  (apply + (map #(- (Math/floor (/ % 3)) 2) inputs)))
+
+(defn day1-solution [] (calculate-fuel-requirements inputs))
