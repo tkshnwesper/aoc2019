@@ -106,4 +106,16 @@
   [inputs]
   (apply + (map #(- (Math/floor (/ % 3)) 2) inputs)))
 
-(defn day1-solution [] (calculate-fuel-requirements inputs))
+(defn- calculate-for-one-module
+  [initial mass]
+  (let [calculated-mass (calculate-fuel-requirements (list mass))]
+    (if (pos? calculated-mass)
+      (recur (+ calculated-mass initial) calculated-mass)
+      initial)))
+
+(defn calculate-fuel-requirements-with-fuel
+  [inputs]
+  (apply + (map #(calculate-for-one-module 0 %) inputs)))
+
+(defn day1-solution-1 [] (calculate-fuel-requirements inputs))
+(defn day1-solution-2 [] (calculate-fuel-requirements-with-fuel inputs))
