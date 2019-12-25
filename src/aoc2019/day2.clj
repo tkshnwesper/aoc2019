@@ -31,4 +31,21 @@
           (concat (list result) (rest (second split-list))))
          (+ 4 initial-index))))))
 
-(defn day2-solution [] (transform-list inputs 0))
+(defn get-noun-and-verb
+  [input-list target]
+  (remove
+   nil?
+   (let [minimum (min (count input-list) 100)] 
+     (for [noun (range minimum)
+           verb (range minimum)]
+       (let [result (transform-list (assoc (vec input-list) 1 noun 2 verb) 0)]
+         (when (= (first result) target)
+           (list (nth result 1) (nth result 2))))))))
+
+(defn day2-part1-solution [] (transform-list inputs 0))
+(defn day2-part2-solution 
+  [] 
+  (let [result (first (get-noun-and-verb inputs 19690720))
+        noun (first result)
+        verb (second result)]
+    (+ (* 100 noun) verb)))
