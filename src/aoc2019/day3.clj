@@ -37,7 +37,7 @@
       '(0 0)
       last-point)))
 
-(defn- get-points
+(defn- get-points-
   [wire-path points]
   (if (empty? wire-path)
     points
@@ -48,16 +48,40 @@
           point-range ((get-point-range-fn pointing) last-point magnitude)]
       (recur (rest wire-path) (concat points point-range)))))
 
+(def get-points (memoize get-points-))
+
 (defn- absolute-distance
   [coords]
   (apply + (map #(. Math abs %) coords)))
 
+(defn- get-all-intersection-points
+  [wire-1 wire-2]
+  (apply clojure.set/intersection
+         (map set (list (get-points wire-1 '())
+                        (get-points wire-2 '())))))
+
 (defn find-closest-intersection
   [wire-1 wire-2]
-  (let [result (map absolute-distance
-                    (apply clojure.set/intersection
-                           (map set (list (get-points wire-1 '())
-                                          (get-points wire-2 '())))))]
+  (let [result (map absolute-distance (get-all-intersection-points wire-1 wire-2))]
     (if (empty? result) nil (apply min result))))
 
+(defn- points-with-starting-point
+  [wire]
+  (conj (get-points wire '()) '(0 0)))
+
+(defn find-least-number-of-steps-to-intersection
+  [wire-1 wire-2]
+  (let [wire-1-points (points-with-starting-point wire-1)
+        wire-2-points (points-with-starting-point wire-2)
+        all-intersection-points (get-all-intersection-points wire-1 wire-2)]
+    (apply min
+           (map
+            (fn [point]
+              (+
+               (.indexOf wire-1-points point)
+               (.indexOf wire-2-points point)))
+            all-intersection-points))))
+
 (defn day3-part1-solution [] (apply find-closest-intersection inputs))
+
+(defn day3-part2-solution [] (apply find-least-number-of-steps-to-intersection inputs))
