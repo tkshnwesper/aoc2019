@@ -1,7 +1,6 @@
 (ns aoc2019.day3-test
   (:require [clojure.test :refer :all]
-            [aoc2019.day3 :refer :all])
-  (:import java.lang.Math))
+            [aoc2019.day3 :refer :all]))
 
 (deftest day3-part1-test
   (testing "empty output when inputs are empty"
